@@ -142,7 +142,8 @@ blocks_dict = {(block.x, block.y, block.z): block for block in blocks}
 # Create the output @@ data file.
 # This file contains the binary data for each cell.
 # This data is a regular grid of x * y * z cells. Cells which weren't defined
-# in the input, are 
+# in the input, are filled in with the no-data value, which results in an empty
+# cell when visualizing.
 print('Writing output @@ file')
 output_filename_data = \
     output_filename_directory + output_filename_base + '_' + \
