@@ -45,11 +45,11 @@ no_data_value = -99999
 
 # Simple definition of a class for a block.
 class Block:
-	def __init__(self, x, y, z, value):
-		self.x = x
-		self.y = y
-		self.z = z
-		self.value = value
+    def __init__(self, x, y, z, value):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.value = value
 
 print('Reading input file')
 
@@ -66,7 +66,7 @@ with open(input_filename, 'rt') as csvfile:
     # Loop over the values in the file.
     for row in csvreader:
 
-		# Get the x/y/z of the block (assumed integral values).     
+        # Get the x/y/z of the block (assumed integral values).     
         x = int(row[0])
         y = int(row[1])
         z = int(row[2])
@@ -74,7 +74,7 @@ with open(input_filename, 'rt') as csvfile:
         # Get the value that we want.
         value = float(row[value_column])
 
-		# Add a block to the list of blocks.
+        # Add a block to the list of blocks.
         block = Block(x, y, z, value)
         blocks.append(block)
         
@@ -102,39 +102,39 @@ print('Writing output .vo file')
 output_filename_vo = output_filename_directory + output_filename_base + '.vo'
 with open(output_filename_vo, 'wt') as output_file_vo:
 
-	# Header.
-	output_file_vo.write('GOCAD Voxet 1\n')
+    # Header.
+    output_file_vo.write('GOCAD Voxet 1\n')
 
-	# Write out the origin.
-	# This is offset so that a minimum block at x,y,z = 1,1,1 will be at 0,0,0.
-	output_file_vo.write(
-		'AXIS_O %f %f %f\n' %
-		(
-			block_size_x * (min_x - 1), 
-			block_size_y * (min_y - 1), 
-			block_size_z * (min_z - 1)
-		))
+    # Write out the origin.
+    # This is offset so that a minimum block at x,y,z = 1,1,1 will be at 0,0,0.
+    output_file_vo.write(
+        'AXIS_O %f %f %f\n' %
+        (
+            block_size_x * (min_x - 1), 
+            block_size_y * (min_y - 1), 
+            block_size_z * (min_z - 1)
+        ))
 
-	# Write out the size of each dimension.
-	output_file_vo.write('AXIS_U %f 0 0\n' % (block_size_x * (num_x - 1)))
-	output_file_vo.write('AXIS_V 0 %f 0\n' % (block_size_y * (num_y - 1)))
-	output_file_vo.write('AXIS_W 0 0 %f\n' % (block_size_z * (num_z - 1)))
-	output_file_vo.write('AXIS_MIN 0 0 0\n')
-	output_file_vo.write('AXIS_MAX 1 1 1\n')
+    # Write out the size of each dimension.
+    output_file_vo.write('AXIS_U %f 0 0\n' % (block_size_x * (num_x - 1)))
+    output_file_vo.write('AXIS_V 0 %f 0\n' % (block_size_y * (num_y - 1)))
+    output_file_vo.write('AXIS_W 0 0 %f\n' % (block_size_z * (num_z - 1)))
+    output_file_vo.write('AXIS_MIN 0 0 0\n')
+    output_file_vo.write('AXIS_MAX 1 1 1\n')
 
-	# Write out the number of blocks.
-	output_file_vo.write('AXIS_N %d %d %d\n' % (num_x, num_y, num_z))
+    # Write out the number of blocks.
+    output_file_vo.write('AXIS_N %d %d %d\n' % (num_x, num_y, num_z))
 
-	# Write out the property definition.
-	output_file_vo.write('\n')
-	output_file_vo.write('PROPERTY 1 "%s"\n' % (output_property_name))
-	output_file_vo.write('PROP_NO_DATA_VALUE 1 %f\n' % (no_data_value));
-	output_file_vo.write(
-		'PROP_FILE 1 %s_%s@@\n' % (output_filename_base, output_property_name))
+    # Write out the property definition.
+    output_file_vo.write('\n')
+    output_file_vo.write('PROPERTY 1 "%s"\n' % (output_property_name))
+    output_file_vo.write('PROP_NO_DATA_VALUE 1 %f\n' % (no_data_value));
+    output_file_vo.write(
+        'PROP_FILE 1 %s_%s@@\n' % (output_filename_base, output_property_name))
 
-	# Write the end of the file.
-	output_file_vo.write('\n')
-	output_file_vo.write('END\n')
+    # Write the end of the file.
+    output_file_vo.write('\n')
+    output_file_vo.write('END\n')
 
 # Create a dictionary of blocks, indexed on a tuple x/y/z.
 blocks_dict = {(block.x, block.y, block.z): block for block in blocks}
@@ -145,32 +145,32 @@ blocks_dict = {(block.x, block.y, block.z): block for block in blocks}
 # in the input, are 
 print('Writing output @@ file')
 output_filename_data = \
-	output_filename_directory + output_filename_base + '_' + \
-	output_property_name + '@@'
+    output_filename_directory + output_filename_base + '_' + \
+    output_property_name + '@@'
 with open(output_filename_data, 'wb') as output_file_data:
 
-	# Loop over the blocks in the output file.
-	# u/v/w is equivalent to x/y/z in the output file's zero-based coordinates.
-	for w in range(num_z):
-		for v in range(num_y):
-			for u in range(num_x):
+    # Loop over the blocks in the output file.
+    # u/v/w is equivalent to x/y/z in the output file's zero-based coordinates.
+    for w in range(num_z):
+        for v in range(num_y):
+            for u in range(num_x):
 
-				# Work out the coordinates of the cell.
-				x = min_x + u
-				y = min_y + v
-				z = min_z + w
+                # Work out the coordinates of the cell.
+                x = min_x + u
+                y = min_y + v
+                z = min_z + w
 
-				# Get the value for this block from the dictionary, ie from
-				# the source data, or the no-data value if the block wasn't in
-				# the source data.
-				key = (x, y, z)
-				value = no_data_value
-				if key in blocks_dict:
-					value = blocks_dict[key].value
+                # Get the value for this block from the dictionary, ie from
+                # the source data, or the no-data value if the block wasn't in
+                # the source data.
+                key = (x, y, z)
+                value = no_data_value
+                if key in blocks_dict:
+                    value = blocks_dict[key].value
 
-				# Write the value to the file as a 4-byte (single precision)
-				# float, in big endian format.
-				output_file_data.write(struct.pack('>f', value))
+                # Write the value to the file as a 4-byte (single precision)
+                # float, in big endian format.
+                output_file_data.write(struct.pack('>f', value))
 
 # That's it, now import the files into GlassTerra :)
 print('Done')
